@@ -8,7 +8,8 @@
 
 (export '(fsharp-mode *fsharp-keyword-file* *fsharp-mode-hook*
 	  *fsharp-mode-syntax-table* *fsharp-mode-map*
-	  *fsharp-mode-abbrev-table* *fsharp-comment-column*))
+	  *fsharp-mode-abbrev-table* *fsharp-comment-column*
+          *fsharp-indent-tabs-mode*))
 
 (defvar *fsharp-mode-hook* nil)
 (defvar *fsharp-mode-map* nil)
@@ -44,6 +45,8 @@
 
 (defvar *fsharp-comment-column* nil)
 
+(defvar *fsharp-indent-tabs-mode* nil)
+
 (defun fsharp-mode ()
   (interactive)
   (kill-all-local-variables)
@@ -58,6 +61,11 @@
   (when *fsharp-keyword-hash-table*
     (make-local-variable 'keyword-hash-table)
     (setq keyword-hash-table *fsharp-keyword-hash-table*))
+  (make-local-variable 'indent-tabs-mode)
+  (setf indent-tabs-mode *fsharp-indent-tabs-mode*)
+  ;; (setf comment-start "//")
+  ;; (setf comment-end "")
+  ;; (setf comment-start-skip "//[ \t]*")
   (run-hooks '*fsharp-mode-hook*))
 
 
