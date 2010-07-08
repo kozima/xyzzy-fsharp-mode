@@ -1,5 +1,5 @@
 F# mode for xyzzy
 
-Currently these files are essentially the same as caml-mode:
+Currently fsharp-mode.l is essentially the same as caml-mode.l:
 
   http://www9.ocn.ne.jp/~y-kwsk/luvtechno/xyzzy.html
