@@ -6,7 +6,8 @@
 
 (in-package "editor")
 
-(export '(fsharp-mode *fsharp-keyword-file* *fsharp-mode-hook*
+(export '(fsharp-mode fsharp-comment-region fsharp-uncomment-region
+          *fsharp-keyword-file* *fsharp-mode-hook*
 	  *fsharp-mode-syntax-table* *fsharp-mode-map*
 	  *fsharp-mode-abbrev-table* *fsharp-comment-column*
           *fsharp-indent-tabs-mode*))
@@ -47,6 +48,30 @@
 
 (defvar *fsharp-indent-tabs-mode* nil)
 
+(defun fsharp-comment-region (start end &optional arg)
+  (interactive "*r\nP")
+  (if arg
+      (fsharp-uncomment-region start end)
+      (save-excursion
+        (save-restriction
+          (narrow-to-region start end)
+          (goto-char (point-min))
+          (loop
+            (when (save-excursion (skip-syntax-spec-forward " ") (not (eolp)))
+              (insert comment-start))
+            (unless (and (forward-line 1) (not (eobp))) (return)))))))
+
+(defun fsharp-uncomment-region (start end)
+  (interactive "*r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region start end)
+      (goto-char (point-min))
+      (skip-syntax-spec-forward " ")
+      (loop
+        (if (looking-for comment-start) (delete-char (length comment-start)))
+        (unless (and (forward-line 1) (not (eobp))) (return))))))
+
 (defun fsharp-mode ()
   (interactive)
   (kill-all-local-variables)
@@ -63,9 +88,9 @@
     (setq keyword-hash-table *fsharp-keyword-hash-table*))
   (make-local-variable 'indent-tabs-mode)
   (setf indent-tabs-mode *fsharp-indent-tabs-mode*)
-  ;; (setf comment-start "//")
-  ;; (setf comment-end "")
-  ;; (setf comment-start-skip "//[ \t]*")
+  (setf comment-start "//")
+  (setf comment-end "")
+  (setf comment-start-skip "//[ \t]*")
   (run-hooks '*fsharp-mode-hook*))
 
 
